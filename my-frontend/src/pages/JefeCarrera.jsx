@@ -1,33 +1,47 @@
-import React, { useState } from 'react';
-import { User, FolderCheck, ChevronDown, Upload, Menu, X, Camera } from 'lucide-react'; // Importar los íconos necesarios
-import { Button } from '../components/ui/Button'; // Importa el botón de UI
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "../components/ui/dropdown-menu"; // Importar los componentes para el dropdown
+import React, { useState } from "react";
+import { User, FolderCheck, ChevronDown, Upload, Menu, X, Camera } from "lucide-react"; // Importar los íconos necesarios
+import { Button } from "../components/ui/Button"; // Importa el botón de UI
+import Profile from "../components/Profile"; // Importar el componente de perfil
+import { useNavigate } from "react-router-dom"; // Navegación
 
 export default function JefeCarreraDashboard() {
-  const [view, setView] = useState('protocolos'); // Estado para controlar la vista actual
+  const [view, setView] = useState("protocolos"); // Estado para controlar la vista actual
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú móvil
-  const [profileEdit, setProfileEdit] = useState(false); // Estado para saber si se está editando el perfil
+  const navigate = useNavigate(); // Hook para navegación
 
   // Datos del perfil (Ejemplo)
   const perfil = {
-    name: 'Carlos Hernández',
-    email: 'carlos.hernandez@matehuala.tecnm.mx',
-    phone: '123-456-7890',
-    career: 'Ingeniería en Sistemas',
-    image: '/image/perfil.png', // Imagen de perfil por defecto
+    name: "Carlos Hernández",
+    email: "carlos.hernandez@matehuala.tecnm.mx",
+    phone: "123-456-7890",
+    career: "Ingeniería en Sistemas",
+    image: "/image/perfil.png", // Imagen de perfil por defecto
   };
 
   // Lista de protocolos de los proyectos
   const protocolos = [
-    { name: 'Protocolos de Sistema de Gestión', student: 'Juan Pérez', career: 'Ingeniería en Sistemas', status: 'Pendiente' },
-    { name: 'Protocolos de Aplicación Móvil', student: 'María González', career: 'Ingeniería en Sistemas', status: 'Aprobado' },
+    { name: "Protocolos de Sistema de Gestión", student: "Juan Pérez", career: "Ingeniería en Sistemas", status: "Pendiente" },
+    { name: "Protocolos de Aplicación Móvil", student: "María González", career: "Ingeniería en Sistemas", status: "Aprobado" },
   ];
 
   // Lista de estudiantes para asignar asesores
   const estudiantes = [
-    { name: 'Juan Pérez', career: 'Ingeniería en Sistemas', assignedAdvisor: 'No asignado' },
-    { name: 'María González', career: 'Ingeniería en Sistemas', assignedAdvisor: 'No asignado' },
+    { name: "Juan Pérez", career: "Ingeniería en Sistemas", assignedAdvisor: "No asignado" },
+    { name: "María González", career: "Ingeniería en Sistemas", assignedAdvisor: "No asignado" },
   ];
+
+  // Función para manejar el cambio de vista y cerrar el menú móvil
+  const handleViewChange = (selectedView) => {
+    setView(selectedView);
+    setIsMenuOpen(false); // Cierra el menú móvil
+  };
+
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); // Elimina el token de autenticación
+    navigate("/login"); // Redirige al inicio de sesión
+    setIsMenuOpen(false); // Cierra el menú móvil
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -48,32 +62,41 @@ export default function JefeCarreraDashboard() {
         </div>
       </header>
 
-      {/* Sidebar (visible solo en pantallas grandes) */}
-      <div className={`md:w-64 bg-[rgb(31,65,155)] text-white p-5 border-r-2 border-white/20 fixed top-16 left-0 bottom-0 md:block ${isMenuOpen ? 'block' : 'hidden'} shadow-md`}>
+      {/* Sidebar */}
+      <div
+        className={`md:w-64 bg-[rgb(31,65,155)] text-white p-5 border-r-2 border-white/20 fixed top-16 left-0 bottom-0 ${
+          isMenuOpen ? "block" : "hidden"
+        } md:block shadow-md`}
+      >
         <nav className="space-y-4">
-          {/* Menú Perfil */}
-          <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10" onClick={() => setView('profile')}>
+          <button
+            className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10 w-full"
+            onClick={() => handleViewChange("profile")}
+          >
             <User className="w-5 h-5" />
             <span>Perfil</span>
-          </a>
-
-          {/* Menú Protocolos */}
-          <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10" onClick={() => setView('protocolos')}>
+          </button>
+          <button
+            className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10 w-full"
+            onClick={() => handleViewChange("protocolos")}
+          >
             <FolderCheck className="w-5 h-5" />
             <span>Protocolos</span>
-          </a>
-
-          {/* Menú Asignar Asesores */}
-          <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10" onClick={() => setView('asesores')}>
+          </button>
+          <button
+            className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10 w-full"
+            onClick={() => handleViewChange("asesores")}
+          >
             <User className="w-5 h-5" />
             <span>Asignar Asesores</span>
-          </a>
-
-          {/* Menú Cerrar sesión */}
-          <a href="#" className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10">
+          </button>
+          <button
+            className="flex items-center space-x-3 px-2 py-2 rounded hover:bg-white/10 w-full"
+            onClick={handleLogout}
+          >
             <Upload className="w-5 h-5" />
             <span>Cerrar Sesión</span>
-          </a>
+          </button>
         </nav>
       </div>
 
@@ -83,65 +106,19 @@ export default function JefeCarreraDashboard() {
           <div className="bg-white rounded-xl shadow-2xl p-6 border border-gray-300">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold text-[rgb(31,65,155)]">
-                {view === 'profile' ? 'Perfil' : view === 'protocolos' ? 'Aprobar Protocolos' : 'Asignar Asesores'}
+                {view === "profile"
+                  ? "Perfil"
+                  : view === "protocolos"
+                  ? "Aprobar Protocolos"
+                  : "Asignar Asesores"}
               </h2>
             </div>
 
-            {/* Mostrar perfil */}
-            {view === 'profile' ? (
-              <div className="flex flex-col items-center text-center">
-                {/* Imagen de perfil y botón para cambiar */}
-                <div className="relative mb-4">
-                  <img 
-                    src={perfil.image} 
-                    alt="Imagen de perfil" 
-                    className="w-32 h-32 rounded-full object-cover" 
-                  />
-                  <Button className="absolute bottom-0 right-0 bg-[rgb(31,65,155)] text-white p-2 rounded-full">
-                    <Camera className="w-5 h-5" />
-                  </Button>
-                </div>
+            {/* Vista de Perfil */}
+            {view === "profile" && <Profile />}
 
-                {/* Información de perfil */}
-                <p className="text-lg text-gray-800 font-semibold mb-2">{perfil.career}</p>
-
-                {/* Formulario de perfil */}
-                <div className="w-full max-w-sm">
-                  <div className="mb-4">
-                    <p className="text-sm text-gray-400 uppercase">Teléfono</p>
-                    <input
-                      type="text"
-                      className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      placeholder={perfil.phone}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <p className="text-sm text-gray-400 uppercase">Email</p>
-                    <input
-                      type="email"
-                      className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      value={perfil.email}
-                      readOnly
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <p className="text-sm text-gray-400 uppercase">Cambiar contraseña</p>
-                    <input
-                      type="password"
-                      className="w-full border-b-2 border-gray-300 focus:border-[rgb(31,65,155)] outline-none text-gray-800"
-                      placeholder="Nueva contraseña"
-                    />
-                  </div>
-
-                  {/* Botón Guardar */}
-                  <div className="flex justify-center mt-6">
-                    <button className="bg-[rgb(31,65,155)] text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none">
-                      GUARDAR
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : view === 'protocolos' ? (
+            {/* Vista de Protocolos */}
+            {view === "protocolos" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {protocolos.map((protocolo, index) => (
                   <div key={index} className="bg-white p-4 rounded-xl shadow-md">
@@ -155,7 +132,10 @@ export default function JefeCarreraDashboard() {
                   </div>
                 ))}
               </div>
-            ) : (
+            )}
+
+            {/* Vista de Asignar Asesores */}
+            {view === "asesores" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {estudiantes.map((estudiante, index) => (
                   <div key={index} className="bg-white p-4 rounded-xl shadow-md">

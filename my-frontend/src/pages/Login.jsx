@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
 import { Mail, Key } from "lucide-react";
@@ -35,15 +36,9 @@ export default function Login() {
 
       // Verificar respuesta
       if (response.ok && data.token && data.role) {
+        // Almacenar el token y rol en el localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("userRole", data.role);
-        
-        // Almacenar los datos completos del usuario
-        localStorage.setItem("user", JSON.stringify({
-          name: data.name, // Asegúrate de que la API devuelva estos datos
-          email: data.email,
-          career: data.career
-        }));
       
         // Redirigir según el rol
         redirectBasedOnRole(data.role);
@@ -64,7 +59,7 @@ export default function Login() {
       case "DOCENTE":
         navigate("/docente");
         break;
-      case "DIVICION":
+      case "DIVISION":
         navigate("/division");
         break;
       case "ASESOR":
@@ -75,6 +70,9 @@ export default function Login() {
         break;
       case "GTIV":
         navigate("/gtiv");
+        break;
+        case "ADMIN":
+        navigate("/Admin");
         break;
       default:
         setErrorMessage("No tienes permisos para acceder.");

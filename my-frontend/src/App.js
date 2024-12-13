@@ -11,7 +11,8 @@ import JefeCarreraDashboard from "./pages/JefeCarrera";
 import DocenteDashboard from "./pages/Docente";
 import GTIVDashboard from "./pages/GTIV";
 import PrivateRoute from "./components/PrivateRoute";
-import Register1 from "./pages/Registro1";
+import Admin from "./pages/Admin";
+import AdminDashboard from "./pages/Admin";
 
 function App() {
   return (
@@ -22,7 +23,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
         <Route path="/ayuda" element={<Ayuda />} />
-        <Route path="/registro1" element={<Register1 />} />
 
         {/* Rutas protegidas */}
         <Route
@@ -36,7 +36,7 @@ function App() {
         <Route
           path="/division"
           element={
-            <PrivateRoute role="DIVICION">
+            <PrivateRoute role="DIVISION">
               <DivisionEstudios />
             </PrivateRoute>
           }
@@ -73,6 +73,12 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/Admin" 
+        element={
+          <PrivateRoute role="ADMIN">
+            <AdminDashboard />
+          </PrivateRoute>
+        } />
       </Routes>
     </Router>
   );
